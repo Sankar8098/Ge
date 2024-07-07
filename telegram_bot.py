@@ -66,7 +66,7 @@ async def handle_video(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 def main() -> None:
     # Replace 'YOUR_TOKEN_HERE' with your actual bot token
-    application = ApplicationBuilder().token("YOUR_TOKEN_HERE").build()
+    application = ApplicationBuilder().token("6769849216:AAEkJSTlvjgfaMOrpWFZ0WArvs9ERXL3Y4Y").build()
 
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("replacecaption", replace_caption_command))
