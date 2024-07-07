@@ -1,6 +1,6 @@
 import re
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Function to customize captions
 def customize_captions(caption, rules, keep_original=False):
@@ -21,48 +21,44 @@ def customize_captions(caption, rules, keep_original=False):
     return caption
 
 # Command handler for /start
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Send /replace <caption>|<rules>|<keep_original> or /caption <caption> to process.')
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text('Send /replace <caption>|<rules>|<keep_original> or /caption <caption> to process.')
 
 # Command handler for /replace
-def replace(update: Update, context: CallbackContext) -> None:
+async def replace(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         message = ' '.join(context.args)
         parts = message.split('|')
         
         if len(parts) != 3:
-            update.message.reply_text('Invalid format. Please use "/replace <caption>|<rules>|<keep_original>".')
+            await update.message.reply_text('Invalid format. Please use "/replace <caption>|<rules>|<keep_original>".')
             return
 
         caption, rules, keep_original = parts
         keep_original = keep_original.lower() == 'true'
 
         new_caption = customize_captions(caption, rules, keep_original)
-        update.message.reply_text(new_caption)
+        await update.message.reply_text(new_caption)
     except Exception as e:
-        update.message.reply_text(f"Error: {e}")
+        await update.message.reply_text(f"Error: {e}")
 
 # Command handler for /caption
-def caption(update: Update, context: CallbackContext) -> None:
+async def caption(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         caption = ' '.join(context.args)
-        update.message.reply_text(caption)
+        await update.message.reply_text(caption)
     except Exception as e:
-        update.message.reply_text(f"Error: {e}")
+        await update.message.reply_text(f"Error: {e}")
 
 def main() -> None:
     # Replace 'YOUR_TOKEN_HERE' with your actual bot token
-    updater = Updater("6769849216:AAEkJSTlvjgfaMOrpWFZ0WArvs9ERXL3Y4Y", use_context=True)
+    application = ApplicationBuilder().token("6769849216:AAEkJSTlvjgfaMOrpWFZ0WArvs9ERXL3Y4Y").build()
 
-    dispatcher = updater.dispatcher
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("replace", replace))
+    application.add_handler(CommandHandler("caption", caption))
 
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("replace", replace))
-    dispatcher.add_handler(CommandHandler("caption", caption))
-
-    updater.start_polling()
-
-    updater.idle()
+    application.run_polling()
 
 if __name__ == '__main__':
     main()
