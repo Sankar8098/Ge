@@ -52,7 +52,7 @@ def caption(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     # Replace 'YOUR_TOKEN_HERE' with your actual bot token
-    updater = Updater("YOUR_TOKEN_HERE", use_context=True)
+    updater = Updater("6769849216:AAEkJSTlvjgfaMOrpWFZ0WArvs9ERXL3Y4Y", use_context=True)
 
     dispatcher = updater.dispatcher
 
